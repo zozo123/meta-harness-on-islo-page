@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Meta-harness on Islo · Yossi Eliaz</title>
+  <meta name="title" content="Meta-harness on Islo: A 200-line POC on Islo Sandboxes">
+  <meta name="description" content="A 200-line POC that wires the meta-harness optimization loop onto Islo sandboxes. Goes from 0/5 to 5/5 in four proposer steps, end-to-end, in about two seconds.">
+  <meta name="keywords" content="meta-harness, islo, harbor, agent eval, llm agents, harness optimization, sandboxes, AI agents">
+  <meta name="author" content="Yossi Eliaz">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#1F6FEB">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Meta-harness on Islo: A 200-line POC">
+  <meta property="og:description" content="A 200-line POC that wires the meta-harness optimization loop onto Islo sandboxes. Goes from 0/5 to 5/5 in four proposer steps.">
+  <meta property="og:url" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/">
+  <meta property="og:image" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/images/architecture.png">
+  <meta property="og:image:width" content="1399">
+  <meta property="og:image:height" content="462">
+  <meta property="article:author" content="Yossi Eliaz">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Meta-harness on Islo: A 200-line POC">
+  <meta name="twitter:description" content="A 200-line POC that wires the meta-harness optimization loop onto Islo sandboxes. Goes from 0/5 to 5/5 in four proposer steps.">
+  <meta name="twitter:image" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/images/architecture.png">
+
+  <meta name="citation_title" content="Meta-harness on Islo: A 200-line POC that goes from 0/5 to 5/5 in four proposer steps">
+  <meta name="citation_author" content="Eliaz, Yossi">
+  <meta name="citation_publication_date" content="2026">
+  <meta name="citation_pdf_url" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/pdfs/paper.pdf">
+
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script defer src="static/js/bulma-carousel.min.js"></script>
+  <script defer src="static/js/bulma-slider.min.js"></script>
+  <script defer src="static/js/index.js"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .publication-title { font-weight: 800; }
+    .author-block { font-size: 1.05rem; }
+    .figure-card {
+      border: 1px solid #d0d7de; border-radius: 8px; padding: 1rem 1rem 0.5rem;
+      background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .figure-card img { display: block; margin: 0 auto; max-width: 100%; }
+    .figure-caption {
+      color: #57606a; font-size: 0.9rem; text-align: center;
+      margin-top: 0.6rem; padding: 0 0.5rem;
+    }
+    pre, code, .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; }
+    pre.shell {
+      background: #0e1116; color: #e6edf3; border-radius: 6px;
+      padding: 0.9rem 1.1rem; font-size: 0.88rem; overflow-x: auto;
+      line-height: 1.55;
+    }
+    pre.shell .comment { color: #8b949e; }
+    pre.shell .cmd { color: #58a6ff; }
+    .results-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .results-table th, .results-table td {
+      padding: 0.55rem 0.9rem; text-align: left; border-bottom: 1px solid #d0d7de;
+    }
+    .results-table th { background: #f6f8fa; color: #24292f; font-weight: 600; }
+    .results-table td.score { font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    .pill { display: inline-block; padding: 2px 10px; border-radius: 999px;
+      font-size: 0.78rem; font-weight: 600; vertical-align: middle; }
+    .pill-poc { background: #ddf4ff; color: #0969da; }
+    .pill-mit { background: #fbefff; color: #6f42c1; }
+    .pill-ok  { background: #dafbe1; color: #1a7f37; }
+    .hero-meta { color: #57606a; font-size: 0.95rem; }
+    .external-link { margin: 0 0.25rem; }
+    .section { padding: 2.2rem 1.5rem; }
+    .container.is-max-desktop { max-width: 1024px !important; }
+    .quick-numbers {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+    .quick-numbers .num {
+      background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 8px;
+      padding: 0.9rem 0.6rem; text-align: center;
+    }
+    .quick-numbers .num .big { font-size: 1.6rem; font-weight: 800; color: #1F6FEB; }
+    .quick-numbers .num .lbl { color: #57606a; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
+    @media (max-width: 600px) { .quick-numbers { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<!-- ============================== HERO ============================== -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-2 publication-title">Meta-harness on Islo</h1>
+          <h2 class="subtitle is-4" style="color:#57606a; font-weight:500; margin-top:0.4rem;">
+            A 200-line POC that goes from 0/5 to 5/5 in four proposer steps
+          </h2>
+
+          <div class="is-size-5 publication-authors" style="margin-top:1.2rem;">
+            <span class="author-block">
+              <strong>Yossi Eliaz</strong>
+            </span>
+          </div>
+
+          <div class="hero-meta" style="margin-top:0.5rem;">
+            Incredibuild &middot; Islo &middot; 2026-05-05
+          </div>
+          <div class="hero-meta" style="margin-top:0.2rem;">
+            <a href="mailto:yossi.eliaz@incredibuild.com">yossi.eliaz@incredibuild.com</a>
+            &middot;
+            <a href="mailto:yossi@islo.dev">yossi@islo.dev</a>
+          </div>
+
+          <div style="margin-top:0.9rem;">
+            <span class="pill pill-poc">POC</span>
+            <span class="pill pill-mit">MIT licensed</span>
+            <span class="pill pill-ok">converges in 4 steps</span>
+          </div>
+
+          <div class="publication-links" style="margin-top:1.6rem;">
+            <span class="link-block external-link">
+              <a href="static/pdfs/paper.pdf" class="button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper (PDF)</span>
+              </a>
+            </span>
+            <span class="link-block external-link">
+              <a href="https://github.com/zozo123/meta-harness-eng-islo"
+                 class="button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fab fa-github"></i></span>
+                <span>Code</span>
+              </a>
+            </span>
+            <span class="link-block external-link">
+              <a href="https://github.com/zozo123/islo-sandbox-based-meta-harnessing-demo"
+                 class="button is-normal is-rounded is-dark">
+                <span class="icon"><i class="fas fa-globe"></i></span>
+                <span>Project page source</span>
+              </a>
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== TEASER ============================== -->
+<section class="section" style="padding-top:0;">
+  <div class="container is-max-desktop">
+    <div class="figure-card">
+      <img src="static/images/architecture.png" alt="Optimization loop architecture diagram">
+      <div class="figure-caption">
+        <strong>The optimization loop, on Islo primitives.</strong>
+        Snapshot once, fork per task, harvest traces to <code>runs/</code>, let the proposer
+        read the full diagnostic context and write the next harness. Each step maps to one
+        <code>islo</code> CLI primitive.
+      </div>
+    </div>
+
+    <div class="quick-numbers">
+      <div class="num"><div class="big">200</div><div class="lbl">lines of orchestrator</div></div>
+      <div class="num"><div class="big">5</div><div class="lbl">tasks in the suite</div></div>
+      <div class="num"><div class="big">4</div><div class="lbl">proposer steps to converge</div></div>
+      <div class="num"><div class="big">~2s</div><div class="lbl">end-to-end demo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== ABSTRACT ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Abstract</h2>
+    <div class="content has-text-justified">
+      <p>
+        A <em>harness</em> is the prompt + tools + scaffolding around an LLM agent. A
+        <em>meta-harness</em> is the loop that improves the harness automatically: a proposer
+        agent reads the diagnostic logs of prior candidates, spots a failure mode, and writes a
+        better harness. Yoonho Lee&rsquo;s
+        <a href="https://yoonholee.com/meta-harness/">framing of the idea</a> makes one sharp
+        claim &mdash; the bottleneck is <strong>diagnostic context</strong>: most optimizers
+        compress prior runs into summary statistics, while meta-harness gives the proposer up
+        to 10M tokens of raw execution traces to <code>grep</code> through.
+      </p>
+      <p>
+        That claim is only useful if the runtime can produce, store, and serve those traces
+        cheaply. We show that <a href="https://docs.islo.dev/">Islo</a> sandboxes already do.
+        The key primitives map 1:1 onto what meta-harness needs:
+        <code>islo snapshot save</code> for reproducible eval environments,
+        <code>islo use --snapshot</code> for cheap parallel forks per candidate, and
+        <code>islo logs</code> for durable diagnostic traces. We wire these together in a
+        ~200-line bash orchestrator with a deterministic offline simulator (so the loop is
+        observable in seconds without burning agent credits) and a pattern-matching proposer
+        that demonstrates the optimization signal end-to-end. The same orchestrator swaps to
+        a real Claude/Islo backend with three line changes.
+      </p>
+      <p>
+        On a 5-task held-out suite (FizzBuzz, primes, list reverse, sum-of-evens, palindrome
+        check) the loop progresses <strong>0/5 &rarr; 2/5 &rarr; 3/5 &rarr; 4/5 &rarr; 5/5</strong>
+        in four proposer steps and converges, well below the 10-iteration cap. We also surface
+        a small but illustrative result: when the proposer&rsquo;s fizzbuzz hint contained the
+        word &ldquo;<em>inclusive</em>,&rdquo; it incidentally fixed the
+        <code>sum-evens</code> task too &mdash; a free transfer-fix that&rsquo;s only visible
+        because the proposer reads <em>all</em> traces, not summary scores.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== METHOD ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Method</h2>
+    <div class="content has-text-justified">
+
+      <h3 class="title is-5">Why Islo snapshots are the missing primitive</h3>
+      <p>Three things meta-harness needs from its runtime:</p>
+      <ol>
+        <li><strong>Reproducible eval environments</strong> &mdash; every candidate harness
+          runs against the <em>same</em> setup, otherwise the score is noise.</li>
+        <li><strong>Massive parallelism</strong> &mdash; testing $N$ candidates $\times K$
+          tasks adds up fast.</li>
+        <li><strong>Persistent traces</strong> &mdash; the proposer needs to read
+          stdout/stderr/agent-thoughts from runs that completed an hour ago.</li>
+      </ol>
+      <p>Islo&rsquo;s primitives map 1:1:</p>
+<pre class="shell"><span class="cmd">islo snapshot save</span> meta-base                  <span class="comment"># prepare environment once</span>
+<span class="cmd">islo use</span> mh-cand-7 --snapshot meta-base ...   <span class="comment"># fork per candidate, in parallel</span>
+<span class="cmd">islo logs</span> mh-cand-7 --type agent              <span class="comment"># diagnostic traces, durable</span></pre>
+
+      <p>
+        Add <code>islo gateway</code> (deny-by-default egress to prevent reward-hacking) and
+        <code>--source github://owner/repo</code> (clone the workload at boot), and the wiring
+        is basically free. <a href="https://github.com/islo-labs/harbor">Harbor</a> &mdash; Islo
+        Labs&rsquo; framework for agent evaluations and RL environments &mdash; slots in as the
+        workload spec.
+      </p>
+
+      <h3 class="title is-5" style="margin-top:1.4rem;">The POC</h3>
+<pre class="shell">tasks/        <span class="comment"># 5 toy "SWE-style" tasks, each prompt.md + grade.sh</span>
+harness/v0/   <span class="comment"># baseline system prompt, deliberately mediocre</span>
+bin/
+  meta-harness    <span class="comment"># bash orchestrator (eval | propose | loop | viz)</span>
+  agent-sim.py    <span class="comment"># deterministic agent stand-in (offline mode)</span>
+  proposer.py     <span class="comment"># reads runs/, emits harness/vN+1</span>
+viz/index.html    <span class="comment"># live dashboard</span>
+runs/             <span class="comment"># populated each iteration</span></pre>
+
+      <p>
+        The agent is a Python simulator that&rsquo;s intentionally buggy &mdash; until the
+        system prompt contains the right hint keyword. The loop is therefore deterministic
+        and offline, runs in seconds, but the wiring is identical to what you&rsquo;d ship
+        against real Claude on Islo. The proposer is 80 lines: read
+        <code>runs/iter-N/</code>, find which tasks failed, look up the missing hint for that
+        task, append it to a new <code>harness/v{N+1}/system.md</code>. A real proposer would
+        be:
+      </p>
+<pre class="shell"><span class="cmd">islo use</span> --snapshot meta-base --agent claude --task "
+  Examine /workspace/runs/iter-${N}. Find a common failure mode in the
+  grade.sh stderr. Write /workspace/harness/v${N+1}/system.md as a small
+  edit on top of v${N}/system.md to fix it."</pre>
+      <p>Same input, same output contract. The orchestrator already has the stub.</p>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================== RESULTS ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Results</h2>
+
+    <div class="columns is-vcentered">
+      <div class="column is-half">
+        <div class="figure-card">
+          <img src="static/images/bar-chart.png" alt="Pass rate per iteration">
+          <div class="figure-caption">
+            <strong>Pass-rate per iteration.</strong> 0/5 baseline, then four monotonic
+            improvements to 5/5. Convergence detected automatically; the loop stops below
+            the 10-iteration cap.
+          </div>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="figure-card">
+          <img src="static/images/heatmap.png" alt="Task by iteration heatmap">
+          <div class="figure-caption">
+            <strong>Task &times; iteration heatmap.</strong> The shape of the green wave shows
+            which tasks were fixed at which step. No regressions: an earlier pass never flips
+            back to fail.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="title is-5" style="margin-top:1.6rem;">What changed at each step</h3>
+    <table class="results-table">
+      <thead>
+        <tr><th>iter</th><th>harness</th><th>score</th><th>what changed</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0</td><td>v0</td><td class="score">0 / 5</td>
+            <td>baseline &mdash; minimal &ldquo;produce only the answer&rdquo; prompt</td></tr>
+        <tr><td>1</td><td>v1</td><td class="score">2 / 5</td>
+            <td>+ &ldquo;Loops are 1-indexed: count from 1 through N inclusive.&rdquo;</td></tr>
+        <tr><td>2</td><td>v2</td><td class="score">3 / 5</td>
+            <td>+ &ldquo;The smallest prime is 2 &mdash; 1 is not prime.&rdquo;</td></tr>
+        <tr><td>3</td><td>v3</td><td class="score">4 / 5</td>
+            <td>+ &ldquo;Use space-separated output for separated values.&rdquo;</td></tr>
+        <tr><td>4</td><td>v4</td><td class="score">5 / 5</td>
+            <td>+ &ldquo;Format constraints are exact-case &mdash; lowercase only.&rdquo;</td></tr>
+      </tbody>
+    </table>
+
+    <h3 class="title is-5" style="margin-top:1.6rem;">A free transfer-fix</h3>
+    <div class="content has-text-justified">
+      <p>
+        Iteration 1 is the most interesting. We added the hint targeting <strong>fizzbuzz</strong>,
+        but the score went from 0/5 &rarr; <em>2</em>/5. The bonus point came from
+        <code>sum-evens</code>: that task needed the word &ldquo;<em>inclusive</em>,&rdquo; and
+        the fizzbuzz hint contained it (&ldquo;count from 1 through N inclusive&rdquo;). A free
+        transfer-fix between two tasks with overlapping vocabulary. A real proposer would
+        either get more such accidents (good) or learn to write more general hints on
+        purpose (also good). This is the kind of cross-trace insight you only see if the
+        proposer can look at <em>all</em> the diagnostics, not summary stats.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== DASHBOARD ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">Live dashboard</h2>
+    <div class="content has-text-justified">
+      <p>
+        A single static HTML page (<code>viz/index.html</code>) polls
+        <code>runs/state.json</code> every 2 seconds and shows a pass-rate timeline, a
+        task &times; iteration heatmap, and a click-to-inspect trace viewer.
+      </p>
+    </div>
+    <div class="figure-card">
+      <img src="static/images/dashboard-sketch.png" alt="Dashboard layout sketch">
+      <div class="figure-caption">
+        <strong>Dashboard layout (sketch).</strong> Pass-rate timeline on top; task &times;
+        iteration heatmap and trace inspector below. Clicking a heatmap cell loads that
+        run&rsquo;s stdout and the <code>grade.sh</code> stderr &mdash; the same diagnostic
+        surface the proposer reads.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== WHAT NEXT ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">What this points at</h2>
+    <div class="content has-text-justified">
+      <p>This POC is intentionally tiny so the loop is observable in one screen. Three obvious next steps:</p>
+      <ul>
+        <li><strong>Real backend.</strong> Swap <code>BACKEND=sim</code> for
+          <code>BACKEND=islo</code>. Each candidate &times; task becomes one
+          <code>islo use --snapshot meta-base</code> call. With Islo&rsquo;s parallelism
+          that&rsquo;s ~5&ndash;10s per task, end-to-end iteration in under a minute.</li>
+        <li><strong>Real workload.</strong> Replace the toy tasks with
+          <a href="https://github.com/islo-labs/harbor">Harbor</a> or
+          <a href="https://github.com/islo-labs/long-horizon">long-horizon</a> tasks. The
+          orchestrator doesn&rsquo;t care &mdash; it only needs <code>prompt.md</code> +
+          <code>grade.sh</code> shape.</li>
+        <li><strong>Real proposer.</strong> Replace <code>proposer.py</code>&rsquo;s
+          pattern-match with Claude reading the full <code>runs/</code> tree from inside a
+          sandbox. This is where the 10M-token diagnostic context actually pays off &mdash;
+          and where you&rsquo;d start seeing proposed <em>tools</em>, not just prompt
+          edits.</li>
+      </ul>
+      <p><strong>Three swaps. Same orchestrator. Same dashboard. The wiring is the thing.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== BIBTEX ============================== -->
+<section class="section" id="BibTeX" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">BibTeX</h2>
+<pre style="background:#f6f8fa; border:1px solid #d0d7de; border-radius:6px; padding:1rem; overflow-x:auto;"><code class="mono">@misc{eliaz2026metaharness,
+  title  = {Meta-harness on Islo: A 200-line POC that goes from 0/5 to 5/5 in four proposer steps},
+  author = {Eliaz, Yossi},
+  year   = {2026},
+  month  = {May},
+  note   = {Code: \url{https://github.com/zozo123/meta-harness-eng-islo}},
+  url    = {https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/}
+}</code></pre>
+  </div>
+</section>
+
+<!-- ============================== ACKNOWLEDGEMENTS ============================== -->
+<section class="section" style="padding-top:0.5rem;">
+  <div class="container is-max-desktop">
+    <h2 class="title is-4">Acknowledgements</h2>
+    <div class="content has-text-justified">
+      <p>
+        Thanks to the meta-harness framing by
+        <a href="https://yoonholee.com/meta-harness/">Yoonho Lee</a>, the
+        <a href="https://github.com/islo-labs">Islo Labs</a> team for the sandbox
+        infrastructure, and the Harbor framework community for the eval-spec shape this
+        POC adopts.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<footer class="footer" style="padding: 2rem 1.5rem;">
+  <div class="container is-max-desktop has-text-centered">
+    <p class="hero-meta">
+      Page source &mdash;
+      <a href="https://github.com/zozo123/islo-sandbox-based-meta-harnessing-demo">github.com/zozo123/islo-sandbox-based-meta-harnessing-demo</a><br>
+      Built from the
+      <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic-project-page-template</a>.
+      &copy; 2026 Yossi Eliaz &mdash; MIT licensed.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

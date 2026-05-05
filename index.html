@@ -15,8 +15,8 @@
   <meta property="og:type" content="article">
   <meta property="og:title" content="Meta-harness on Islo: A 200-line POC">
   <meta property="og:description" content="A 200-line POC that wires the meta-harness optimization loop onto Islo sandboxes. Goes from 0/5 to 5/5 in four proposer steps.">
-  <meta property="og:url" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/">
-  <meta property="og:image" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/images/architecture.png">
+  <meta property="og:url" content="https://zozo123.github.io/meta-harness-on-islo-page/">
+  <meta property="og:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/architecture.png">
   <meta property="og:image:width" content="1399">
   <meta property="og:image:height" content="462">
   <meta property="article:author" content="Yossi Eliaz">
@@ -24,12 +24,12 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Meta-harness on Islo: A 200-line POC">
   <meta name="twitter:description" content="A 200-line POC that wires the meta-harness optimization loop onto Islo sandboxes. Goes from 0/5 to 5/5 in four proposer steps.">
-  <meta name="twitter:image" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/images/architecture.png">
+  <meta name="twitter:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/architecture.png">
 
   <meta name="citation_title" content="Meta-harness on Islo: A 200-line POC that goes from 0/5 to 5/5 in four proposer steps">
   <meta name="citation_author" content="Eliaz, Yossi">
   <meta name="citation_publication_date" content="2026">
-  <meta name="citation_pdf_url" content="https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/static/pdfs/paper.pdf">
+  <meta name="citation_pdf_url" content="https://zozo123.github.io/meta-harness-on-islo-page/static/pdfs/paper.pdf">
 
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
 
@@ -118,7 +118,7 @@
           </div>
 
           <div class="hero-meta" style="margin-top:0.5rem;">
-            Incredibuild &middot; Islo &middot; 2026-05-05
+            Incredibuild &middot; <a href="https://islo.dev/">Islo</a> &middot; 2026-05-05
           </div>
           <div class="hero-meta" style="margin-top:0.2rem;">
             <a href="mailto:yossi.eliaz@incredibuild.com">yossi.eliaz@incredibuild.com</a>
@@ -140,17 +140,25 @@
               </a>
             </span>
             <span class="link-block external-link">
-              <a href="https://github.com/zozo123/meta-harness-eng-islo"
+              <a href="https://github.com/zozo123/meta-harness-on-islo"
                  class="button is-normal is-rounded is-dark">
                 <span class="icon"><i class="fab fa-github"></i></span>
                 <span>Code</span>
               </a>
             </span>
             <span class="link-block external-link">
-              <a href="https://github.com/zozo123/islo-sandbox-based-meta-harnessing-demo"
+              <a href="https://github.com/zozo123/meta-harness-on-islo-page"
                  class="button is-normal is-rounded is-dark">
                 <span class="icon"><i class="fas fa-globe"></i></span>
                 <span>Project page source</span>
+              </a>
+            </span>
+            <span class="link-block external-link">
+              <a href="https://islo.dev/"
+                 class="button is-normal is-rounded is-link"
+                 style="background:#1F6FEB; border-color:#1F6FEB;">
+                <span class="icon"><i class="fas fa-cube"></i></span>
+                <span>Built on islo.dev</span>
               </a>
             </span>
           </div>
@@ -200,7 +208,8 @@
       </p>
       <p>
         That claim is only useful if the runtime can produce, store, and serve those traces
-        cheaply. We show that <a href="https://docs.islo.dev/">Islo</a> sandboxes already do.
+        cheaply. We show that <a href="https://islo.dev/">Islo</a>
+        (<a href="https://docs.islo.dev/">docs</a>) sandboxes already do.
         The key primitives map 1:1 onto what meta-harness needs:
         <code>islo snapshot save</code> for reproducible eval environments,
         <code>islo use --snapshot</code> for cheap parallel forks per candidate, and
@@ -403,8 +412,8 @@ runs/             <span class="comment"># populated each iteration</span></pre>
   author = {Eliaz, Yossi},
   year   = {2026},
   month  = {May},
-  note   = {Code: \url{https://github.com/zozo123/meta-harness-eng-islo}},
-  url    = {https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/}
+  note   = {Code: \url{https://github.com/zozo123/meta-harness-on-islo}},
+  url    = {https://zozo123.github.io/meta-harness-on-islo-page/}
 }</code></pre>
   </div>
 </section>
@@ -417,7 +426,8 @@ runs/             <span class="comment"># populated each iteration</span></pre>
       <p>
         Thanks to the meta-harness framing by
         <a href="https://yoonholee.com/meta-harness/">Yoonho Lee</a>, the
-        <a href="https://github.com/islo-labs">Islo Labs</a> team for the sandbox
+        <a href="https://islo.dev/">Islo</a>
+        (<a href="https://github.com/islo-labs">Islo Labs</a>) team for the sandbox
         infrastructure, and the Harbor framework community for the eval-spec shape this
         POC adopts.
       </p>
@@ -429,10 +439,10 @@ runs/             <span class="comment"># populated each iteration</span></pre>
 <footer class="footer" style="padding: 2rem 1.5rem;">
   <div class="container is-max-desktop has-text-centered">
     <p class="hero-meta">
-      Page source &mdash;
-      <a href="https://github.com/zozo123/islo-sandbox-based-meta-harnessing-demo">github.com/zozo123/islo-sandbox-based-meta-harnessing-demo</a><br>
-      Built from the
-      <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic-project-page-template</a>.
+      Code: <a href="https://github.com/zozo123/meta-harness-on-islo">github.com/zozo123/meta-harness-on-islo</a> &middot;
+      Page source: <a href="https://github.com/zozo123/meta-harness-on-islo-page">github.com/zozo123/meta-harness-on-islo-page</a><br>
+      Built on <a href="https://islo.dev/"><strong>islo.dev</strong></a> &middot;
+      Page template: <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic-project-page-template</a>.<br>
       &copy; 2026 Yossi Eliaz &mdash; MIT licensed.
     </p>
   </div>

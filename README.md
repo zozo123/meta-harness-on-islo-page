@@ -1,10 +1,12 @@
-# islo-sandbox-based-meta-harnessing-demo
+# meta-harness-on-islo-page
 
-Project page for **Meta-harness on Islo** — a 200-line POC that wires the [meta-harness](https://yoonholee.com/meta-harness/) optimization loop onto Islo sandboxes.
+Project page for **Meta-harness on Islo** — a 200-line POC that wires the [meta-harness](https://yoonholee.com/meta-harness/) optimization loop onto [Islo](https://islo.dev/) sandboxes.
 
-> **Live page:** https://zozo123.github.io/islo-sandbox-based-meta-harnessing-demo/
+> **Live page:** https://zozo123.github.io/meta-harness-on-islo-page/
 >
-> **Code repo:** https://github.com/zozo123/meta-harness-eng-islo
+> **Code repo:** https://github.com/zozo123/meta-harness-on-islo
+>
+> **Built on:** [islo.dev](https://islo.dev/)
 
 ## Layout
 

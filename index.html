@@ -62,13 +62,28 @@
       margin-top: 0.6rem; padding: 0 0.5rem;
     }
     pre, code, .mono { font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; }
+    /* Light-theme code block, GitHub-like, !important to defeat Bulma's pre rules. */
     pre.shell {
-      background: #0e1116; color: #e6edf3; border-radius: 6px;
-      padding: 0.9rem 1.1rem; font-size: 0.88rem; overflow-x: auto;
-      line-height: 1.55;
+      background: #f6f8fa !important;
+      border: 1px solid #d0d7de !important;
+      color: #1f2328 !important;
+      border-radius: 6px !important;
+      padding: 0.95rem 1.15rem !important;
+      font-size: 0.86rem;
+      overflow-x: auto;
+      line-height: 1.65;
+      white-space: pre;
     }
-    pre.shell .comment { color: #8b949e; }
-    pre.shell .cmd { color: #58a6ff; }
+    pre.shell .comment { color: #6e7781 !important; font-style: italic; }
+    pre.shell .cmd     { color: #0969da !important; font-weight: 600; }
+    pre.shell .arg     { color: #8250df; }
+    pre.shell .str     { color: #0a3069; }
+    /* Inline code in body text — GitHub-style chip */
+    p code, li code, td code {
+      background: #f6f8fa; border: 1px solid #eaeef2;
+      border-radius: 4px; padding: 0.05em 0.4em;
+      font-size: 0.88em; color: #1f2328;
+    }
     .results-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
     .results-table th, .results-table td {
       padding: 0.55rem 0.9rem; text-align: left; border-bottom: 1px solid #d0d7de;

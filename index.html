@@ -7,7 +7,7 @@
   <title>Meta-harness simulation · Yossi Eliaz</title>
   <meta name="title" content="Meta-harness on Islo: Deterministic Simulation">
   <meta name="description" content="A deterministic offline simulation: a Python agent stand-in and a predefined hint proposer move five toy tasks from 0/5 to 5/5 in four steps. Islo integration is an unvalidated stub.">
-  <meta name="keywords" content="meta-harness, islo, harbor, agent eval, llm agents, harness optimization, sandboxes, AI agents">
+  <meta name="keywords" content="meta-harness, islo, deterministic simulation, agent eval, llm agents, harness optimization">
   <meta name="author" content="Yossi Eliaz">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#1F6FEB">
@@ -16,17 +16,19 @@
   <meta property="og:title" content="Meta-harness on Islo: Deterministic Simulation">
   <meta property="og:description" content="Deterministic simulation: 0/5 to 5/5 on five toy tasks using a Python agent stand-in and predefined hints. No real-LLM benchmark; Islo backend is an unvalidated stub.">
   <meta property="og:url" content="https://zozo123.github.io/meta-harness-on-islo-page/">
-  <meta property="og:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/architecture.png">
-  <meta property="og:image:width" content="1492">
-  <meta property="og:image:height" content="529">
+  <meta property="og:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Meta-harness on Islo. Deterministic simulation: 0/5 to 5/5 in four proposer steps.">
   <meta property="article:author" content="Yossi Eliaz">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Meta-harness on Islo: Deterministic Simulation">
   <meta name="twitter:description" content="Deterministic simulation: 0/5 to 5/5 on five toy tasks using a Python agent stand-in and predefined hints. No real-LLM benchmark; Islo backend is an unvalidated stub.">
-  <meta name="twitter:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/architecture.png">
+  <meta name="twitter:image" content="https://zozo123.github.io/meta-harness-on-islo-page/static/images/og-card.png">
+  <meta name="twitter:image:alt" content="Meta-harness on Islo. Deterministic simulation: 0/5 to 5/5 in four proposer steps.">
 
-  <meta name="citation_title" content="Meta-harness on Islo: Deterministic simulation from 0/5 to 5/5">
+  <meta name="citation_title" content="Meta-harness on Islo: Deterministic Simulation">
   <meta name="citation_author" content="Eliaz, Yossi">
   <meta name="citation_publication_date" content="2026">
   <meta name="citation_pdf_url" content="https://zozo123.github.io/meta-harness-on-islo-page/static/pdfs/paper.pdf">
@@ -133,7 +135,7 @@
           </div>
 
           <div class="hero-meta" style="margin-top:0.5rem;">
-            Incredibuild &middot; <a href="https://islo.dev/">Islo</a> &middot; 2026-05-05
+            Incredibuild &middot; <a href="https://islo.dev/">Islo</a> &middot; 2026-05-05 (revised 2026-10-22)
           </div>
           <div class="hero-meta" style="margin-top:0.2rem;">
             <a href="mailto:yossi.eliaz@incredibuild.com">yossi.eliaz@incredibuild.com</a>
@@ -151,7 +153,7 @@
             <span class="link-block external-link">
               <a href="static/pdfs/paper.pdf" class="button is-normal is-rounded is-dark">
                 <span class="icon"><i class="fas fa-file-pdf"></i></span>
-                <span>Paper (PDF)</span>
+                <span>Writeup (PDF)</span>
               </a>
             </span>
             <span class="link-block external-link">
@@ -248,12 +250,12 @@
       <ol>
         <li><strong>Reproducible eval environments</strong> &mdash; every candidate harness
           runs against the <em>same</em> setup, otherwise the score is noise.</li>
-        <li><strong>Massive parallelism</strong> &mdash; testing $N$ candidates $\times K$
+        <li><strong>Massive parallelism</strong> &mdash; testing N candidates &times; K
           tasks adds up fast.</li>
         <li><strong>Persistent traces</strong> &mdash; the proposer needs to read
           stdout/stderr/agent-thoughts from runs that completed an hour ago.</li>
       </ol>
-      <p>Islo&rsquo;s primitives map 1:1:</p>
+      <p>Proposed CLI mapping (not exercised by the simulation):</p>
 <pre class="shell"><span class="cmd">islo snapshot save</span> meta-base                  <span class="comment"># prepare environment once</span>
 <span class="cmd">islo use</span> mh-cand-7 --snapshot meta-base ...   <span class="comment"># fork per candidate, in parallel</span>
 <span class="cmd">islo logs</span> mh-cand-7 --type agent              <span class="comment"># diagnostic traces, durable</span></pre>
@@ -334,9 +336,9 @@ runs/             <span class="comment"># populated each iteration</span></pre>
         <tr><td>2</td><td>v2</td><td class="score">3 / 5</td>
             <td>+ &ldquo;The smallest prime is 2 &mdash; 1 is not prime.&rdquo;</td></tr>
         <tr><td>3</td><td>v3</td><td class="score">4 / 5</td>
-            <td>+ &ldquo;Use space-separated output for separated values.&rdquo;</td></tr>
+            <td>+ &ldquo;When asked for separated values, use space-separated output.&rdquo;</td></tr>
         <tr><td>4</td><td>v4</td><td class="score">5 / 5</td>
-            <td>+ &ldquo;Format constraints are exact-case &mdash; lowercase only.&rdquo;</td></tr>
+            <td>+ &ldquo;Format constraints are exact-case &mdash; produce all lowercase only when required.&rdquo;</td></tr>
       </tbody>
     </table>
 
@@ -386,11 +388,9 @@ runs/             <span class="comment"># populated each iteration</span></pre>
           stub: source hydration, task/harness synchronization, output capture, and the CLI
           contract. Parallel task execution is not implemented. No real-backend latency is
           measured here.</li>
-        <li><strong>Real workload.</strong> Replace the toy tasks with
-          <a href="https://github.com/harbor-framework/harbor">Harbor</a> or
-          <a href="https://github.com/islo-labs/long-horizon">long-horizon</a> tasks. The
-          orchestrator doesn&rsquo;t care &mdash; it only needs <code>prompt.md</code> +
-          <code>grade.sh</code> shape.</li>
+        <li><strong>Real workload.</strong> Add and validate a
+          <a href="https://github.com/harbor-framework/harbor">Harbor</a> adapter for the
+          <code>prompt.md</code> + <code>grade.sh</code> task shape.</li>
         <li><strong>Real proposer.</strong> Replace the predefined hint table with an LLM
           that reads <code>runs/</code>. Evaluate on tasks whose fixes are not encoded in the
           proposer before claiming generalization.</li>
@@ -403,9 +403,9 @@ runs/             <span class="comment"># populated each iteration</span></pre>
 <!-- ============================== BIBTEX ============================== -->
 <section class="section" id="BibTeX" style="padding-top:0.5rem;">
   <div class="container is-max-desktop">
-    <h2 class="title is-3">BibTeX</h2>
+    <h2 class="title is-3">Cite this writeup</h2>
 <pre style="background:#f6f8fa; border:1px solid #d0d7de; border-radius:6px; padding:1rem; overflow-x:auto;"><code class="mono">@misc{eliaz2026metaharness,
-  title  = {Meta-harness on Islo: Deterministic simulation from 0/5 to 5/5},
+  title  = {Meta-harness on Islo: Deterministic Simulation},
   author = {Eliaz, Yossi},
   year   = {2026},
   month  = {May},
@@ -421,12 +421,8 @@ runs/             <span class="comment"># populated each iteration</span></pre>
     <h2 class="title is-4">Acknowledgements</h2>
     <div class="content has-text-justified">
       <p>
-        Thanks to the meta-harness framing by
-        <a href="https://yoonholee.com/meta-harness/">Yoonho Lee</a>, the
-        <a href="https://islo.dev/">Islo</a>
-        (<a href="https://github.com/islo-labs">Islo Labs</a>) team for the sandbox
-        infrastructure, and the Harbor framework community for the eval-spec shape this
-        POC adopts.
+        Thanks to <a href="https://yoonholee.com/meta-harness/">Yoonho Lee</a> for the
+        meta-harness framing. <a href="https://islo.dev/">Islo</a> is the proposed runtime.
       </p>
     </div>
   </div>

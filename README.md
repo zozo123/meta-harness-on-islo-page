@@ -20,6 +20,7 @@ static/
     bar-chart.png       deterministic simulation pass-rate per iteration
     heatmap.png         task × iteration grid
     dashboard-sketch.png  layout sketch of viz/index.html
+    og-card.png         1200×630 social preview card (from og-card.svg)
     favicon.ico
   pdfs/
     paper.pdf           docs/post.pdf from the code repo (typeset writeup)

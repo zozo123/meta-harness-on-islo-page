@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <!-- Social preview card. Render: rsvg-convert -w 1200 -h 630 og-card.svg -o og-card.png -->
+  <defs>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F6FEB"/>
+      <stop offset="1" stop-color="#3FB950"/>
+    </linearGradient>
+  </defs>
+  <style>
+    text { font-family: Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+    .title { font-size: 84px; font-weight: 800; fill: #1f2328; }
+    .sub   { font-size: 34px; font-weight: 500; fill: #57606a; }
+    .pill  { font-size: 22px; font-weight: 600; fill: #0969da; }
+    .score { font-size: 20px; font-weight: 700; fill: #1f2328; }
+    .ver   { font-size: 18px; fill: #57606a; }
+    .note  { font-size: 23px; fill: #57606a; }
+    .foot  { font-size: 22px; fill: #57606a; }
+  </style>
+
+  <rect width="1200" height="630" fill="#ffffff"/>
+  <rect width="1200" height="10" fill="#1F6FEB"/>
+
+  <rect x="80" y="70" width="226" height="42" rx="21" fill="#ddf4ff"/>
+  <text class="pill" x="193" y="99" text-anchor="middle">Offline simulation</text>
+
+  <text class="title" x="80" y="222">Meta-harness on Islo</text>
+  <text class="sub" x="80" y="282">Deterministic simulation: 0/5 → 5/5 in four proposer steps</text>
+
+  <!-- Simulation pass counts per harness version: 0, 2, 3, 4, 5 of 5 (max height 120) -->
+  <line x1="80" y1="470" x2="460" y2="470" stroke="#d0d7de" stroke-width="2"/>
+  <rect x="88"  y="466" width="56" height="4"   fill="#d1d5da"/>
+  <rect x="164" y="422" width="56" height="48"  fill="url(#bar)"/>
+  <rect x="240" y="398" width="56" height="72"  fill="url(#bar)"/>
+  <rect x="316" y="374" width="56" height="96"  fill="url(#bar)"/>
+  <rect x="392" y="350" width="56" height="120" fill="url(#bar)"/>
+  <text class="score" x="116" y="456" text-anchor="middle" style="fill:#8b949e;font-weight:500">0/5</text>
+  <text class="score" x="192" y="412" text-anchor="middle">2/5</text>
+  <text class="score" x="268" y="388" text-anchor="middle">3/5</text>
+  <text class="score" x="344" y="364" text-anchor="middle">4/5</text>
+  <text class="score" x="420" y="340" text-anchor="middle">5/5</text>
+  <text class="ver" x="116" y="496" text-anchor="middle">v0</text>
+  <text class="ver" x="192" y="496" text-anchor="middle">v1</text>
+  <text class="ver" x="268" y="496" text-anchor="middle">v2</text>
+  <text class="ver" x="344" y="496" text-anchor="middle">v3</text>
+  <text class="ver" x="420" y="496" text-anchor="middle">v4</text>
+
+  <text class="note" x="520" y="400">Scripted agent stand-in + hardcoded hint table.</text>
+  <text class="note" x="520" y="438">No LLM calls. Islo backend is an unvalidated stub.</text>
+
+  <line x1="80" y1="540" x2="1120" y2="540" stroke="#d0d7de" stroke-width="2"/>
+  <text class="foot" x="80" y="584">Yossi Eliaz · zozo123.github.io/meta-harness-on-islo-page</text>
+</svg>

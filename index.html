@@ -80,6 +80,7 @@
       background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .figure-card img { display: block; margin: 0 auto; max-width: 100%; }
+    .figure-link { display: block; }
     .figure-caption {
       color: #57606a; font-size: 0.9rem; text-align: center;
       margin-top: 0.6rem; padding: 0 0.5rem;
@@ -97,7 +98,7 @@
       line-height: 1.65;
       white-space: pre;
     }
-    pre.shell .comment { color: #6e7781 !important; font-style: italic; }
+    pre.shell .comment { color: #636c76 !important; font-style: italic; }
     pre.shell .cmd     { color: #0969da !important; font-weight: 600; }
     pre.shell .arg     { color: #8250df; }
     pre.shell .str     { color: #0a3069; }
@@ -107,7 +108,8 @@
       border-radius: 4px; padding: 0.05em 0.4em;
       font-size: 0.88em; color: #1f2328;
     }
-    .results-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    .table-scroll { overflow-x: auto; margin: 1rem 0; }
+    .results-table { width: 100%; border-collapse: collapse; }
     .results-table th, .results-table td {
       padding: 0.55rem 0.9rem; text-align: left; border-bottom: 1px solid #d0d7de;
     }
@@ -133,7 +135,10 @@
     .quick-numbers .num .big { font-size: 1.6rem; font-weight: 800; color: #1F6FEB; }
     .quick-numbers .num .lbl { color: #57606a; font-size: 0.78rem;
       text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.2rem; }
-    @media (max-width: 600px) { .quick-numbers { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) {
+      .quick-numbers { grid-template-columns: repeat(2, 1fr); }
+      .results-table th, .results-table td { padding: 0.45rem 0.5rem; }
+    }
   </style>
 </head>
 <body>
@@ -211,7 +216,7 @@
 <section class="section" style="padding-top:0;">
   <div class="container is-max-desktop">
     <div class="figure-card">
-      <img src="static/images/architecture.png" alt="Optimization loop architecture diagram">
+      <a class="figure-link" href="static/images/architecture.png"><img src="static/images/architecture.png" alt="Optimization loop architecture diagram"></a>
       <div class="figure-caption">
         <strong>Proposed Islo architecture.</strong>
         Snapshot and sandbox steps are a design target. The published results use local
@@ -345,23 +350,25 @@ runs/             <span class="comment"># populated each iteration</span></pre>
     </div>
 
     <h3 class="title is-5" style="margin-top:1.6rem;">What changed at each step</h3>
-    <table class="results-table">
-      <thead>
-        <tr><th>iter</th><th>harness</th><th>simulation score</th><th>what changed</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>0</td><td>v0</td><td class="score">0 / 5</td>
-            <td>baseline &mdash; minimal &ldquo;produce only the answer&rdquo; prompt</td></tr>
-        <tr><td>1</td><td>v1</td><td class="score">2 / 5</td>
-            <td>+ &ldquo;Loops are 1-indexed: count from 1 through N inclusive.&rdquo;</td></tr>
-        <tr><td>2</td><td>v2</td><td class="score">3 / 5</td>
-            <td>+ &ldquo;The smallest prime is 2 &mdash; 1 is not prime.&rdquo;</td></tr>
-        <tr><td>3</td><td>v3</td><td class="score">4 / 5</td>
-            <td>+ &ldquo;When asked for separated values, use space-separated output.&rdquo;</td></tr>
-        <tr><td>4</td><td>v4</td><td class="score">5 / 5</td>
-            <td>+ &ldquo;Format constraints are exact-case &mdash; produce all lowercase only when required.&rdquo;</td></tr>
-      </tbody>
-    </table>
+    <div class="table-scroll">
+      <table class="results-table">
+        <thead>
+          <tr><th>iter</th><th>harness</th><th>simulation score</th><th>what changed</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>v0</td><td class="score">0 / 5</td>
+              <td>baseline &mdash; minimal &ldquo;produce only the answer&rdquo; prompt</td></tr>
+          <tr><td>1</td><td>v1</td><td class="score">2 / 5</td>
+              <td>+ &ldquo;Loops are 1-indexed: count from 1 through N inclusive.&rdquo;</td></tr>
+          <tr><td>2</td><td>v2</td><td class="score">3 / 5</td>
+              <td>+ &ldquo;The smallest prime is 2 &mdash; 1 is not prime.&rdquo;</td></tr>
+          <tr><td>3</td><td>v3</td><td class="score">4 / 5</td>
+              <td>+ &ldquo;When asked for separated values, use space-separated output.&rdquo;</td></tr>
+          <tr><td>4</td><td>v4</td><td class="score">5 / 5</td>
+              <td>+ &ldquo;Format constraints are exact-case &mdash; produce all lowercase only when required.&rdquo;</td></tr>
+        </tbody>
+      </table>
+    </div>
 
     <h3 class="title is-5" style="margin-top:1.6rem;">Designed keyword overlap</h3>
     <div class="content has-text-justified">
@@ -387,7 +394,7 @@ runs/             <span class="comment"># populated each iteration</span></pre>
       </p>
     </div>
     <div class="figure-card">
-      <img src="static/images/dashboard-sketch.png" alt="Dashboard layout sketch">
+      <a class="figure-link" href="static/images/dashboard-sketch.png"><img src="static/images/dashboard-sketch.png" alt="Dashboard layout sketch"></a>
       <div class="figure-caption">
         <strong>Dashboard layout (sketch).</strong> Pass-rate timeline on top; task &times;
         iteration heatmap and trace inspector below. Clicking a heatmap cell loads that
